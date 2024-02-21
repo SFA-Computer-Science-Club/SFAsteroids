@@ -27,6 +27,8 @@ animations = [{
 position = Vector2(2, -2)
 mass = 0.01
 gravity_scale = 0.0
+max_contacts_reported = 4
+contact_monitor = true
 script = ExtResource("1_oes7u")
 metadata/_edit_group_ = true
 
@@ -50,3 +52,5 @@ volume_db = -15.0
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 energy = 0.57
 max_distance = 400.0
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

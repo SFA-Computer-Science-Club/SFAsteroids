@@ -1,19 +1,32 @@
 using Godot;
 using System;
 
-public partial class ship : RigidBody2D
+public partial class ship : RigidBody2D 
 {
 
+	//When [Export] is used above a variable, it will show up in the game editor, with a default value of 2
 	[Export] 
 	public int EnginePower { get; set; } = 2;
 
 	[Export] public double FireDelay { get; set; } = 0.5;
 
+	[Signal]
+	public delegate void HitEventHandler();
+
 	public Vector2 ScreenSize;
 	private RigidBody2D physics;
+	private CollisionShape2D collider;
 	private PackedScene projectile;
 	private Timer timer = new Timer();
 	private AudioStreamPlayer2D player;
+
+
+	//TODO Ensure that the colliding body is an Asteroid, otherwise, ignore it
+	private void OnBodyEntered(Node2D body)
+	{
+		EmitSignal(SignalName.Hit);
+		collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	
@@ -24,7 +37,7 @@ public partial class ship : RigidBody2D
 		AddChild(timer);
 		timer.WaitTime = 0.25f;
 		timer.OneShot = true;
-
+		collider = GetNode<CollisionShape2D>("CollisionShape2D");
 		player = GetNode<AudioStreamPlayer2D>("AudioPlayer");
 	}
 	
@@ -32,8 +45,8 @@ public partial class ship : RigidBody2D
 	public override void _Process(double delta)
 	{
 		var velocity = LinearVelocity; // The player's movement vector.
-		var mousePos = GetViewport().GetMousePosition();
-		var angleTo = Position.AngleToPoint(mousePos);
+		var mousePos = GetViewport().GetMousePosition(); //2D mouse Position
+		var angleTo = Position.AngleToPoint(mousePos); //Find the angle needed to reach the players mouse position from current ship position
 		var forwardVector = new Vector2(Mathf.Cos(GlobalRotation + Mathf.DegToRad(-90)), Mathf.Sin(GlobalRotation + Mathf.DegToRad(-90))).Normalized();
 		var rightVector = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
 		Rotation = angleTo + Mathf.DegToRad(90f);
@@ -42,6 +55,8 @@ public partial class ship : RigidBody2D
 			Vector2 scaled = velocity*-0.002f;
 			ApplyForce(scaled);
 		}
+		
+		//Movement code
 		bool anyPressed = false;
 		
 		if (Input.IsActionPressed("move_right"))
@@ -71,6 +86,7 @@ public partial class ship : RigidBody2D
 			anyPressed = true;
 		}
 
+		//Handles firing
 		if (Input.IsActionPressed("fire"))
 		{
 			if (timer.IsStopped())
@@ -87,11 +103,13 @@ public partial class ship : RigidBody2D
 			}
 		}
 
+		//Restricts max velocity
 		velocity.X = Mathf.Clamp(velocity.X, -250, 250);
 		velocity.Y = Mathf.Clamp(velocity.Y, -250, 250);
 
 		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 
+		//Handles the engine animation
 		if (anyPressed)
 		{
 			animatedSprite2D.Frame = 1;
@@ -101,6 +119,7 @@ public partial class ship : RigidBody2D
 			animatedSprite2D.Frame = 0;
 		}
 		
+		//This code actually updates the position by the velocity
 		Position += velocity * (float)delta;
 		Position = new Vector2(
 			x: Mathf.Clamp(Position.X, 0, ScreenSize.X),

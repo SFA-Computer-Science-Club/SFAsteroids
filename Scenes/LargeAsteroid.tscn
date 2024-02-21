@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bplab05m38mn8"]
+
+[ext_resource type="Texture2D" uid="uid://dee8d012a15e8" path="res://Assets/Textures/Asteroid1.png" id="1_cir8m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7nuf8"]
+size = Vector2(43, 58)
+
+[node name="LargeAsteroid" type="RigidBody2D"]
+collision_mask = 0
+mass = 4.0
+gravity_scale = 0.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_cir8m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-3.5, 3)
+shape = SubResource("RectangleShape2D_7nuf8")
