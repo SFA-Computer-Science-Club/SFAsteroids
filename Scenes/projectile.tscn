@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://b4dyx5ncovcph"]
+
+[ext_resource type="Script" path="res://Code/projectile.cs" id="1_fhfb1"]
+[ext_resource type="Texture2D" uid="uid://q52vx6t0d1m2" path="res://Assets/Textures/Projectile1.png" id="1_xn112"]
+[ext_resource type="Texture2D" uid="uid://cru6kmluqxapu" path="res://Assets/Textures/Projectile2.png" id="2_rqd1w"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ny8ef"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xn112")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_rqd1w")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dcugc"]
+radius = 5.0
+
+[sub_resource type="Gradient" id="Gradient_wsujg"]
+offsets = PackedFloat32Array(0, 0.75974)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4qnbt"]
+gradient = SubResource("Gradient_wsujg")
+width = 90
+height = 90
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Projectile" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 0
+mass = 0.01
+gravity_scale = 0.0
+script = ExtResource("1_fhfb1")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ny8ef")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_dcugc")
+debug_color = Color(0.647059, 0.482353, 0.541176, 0.419608)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.705882, 0, 0, 1)
+energy = 2.07
+texture = SubResource("GradientTexture2D_4qnbt")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
