@@ -6,7 +6,7 @@ public partial class ship : RigidBody2D
 
 	//When [Export] is used above a variable, it will show up in the game editor, with a default value of 2
 	[Export] 
-	public int EnginePower { get; set; } = 2;
+	public int EnginePower { get; set; } = 5;
 
 	[Export] public double FireDelay { get; set; } = 0.5;
 
@@ -45,11 +45,15 @@ public partial class ship : RigidBody2D
 	public override void _Process(double delta)
 	{
 		var velocity = LinearVelocity; // The player's movement vector.
-		var mousePos = GetViewport().GetMousePosition(); //2D mouse Position
-		var angleTo = Position.AngleToPoint(mousePos); //Find the angle needed to reach the players mouse position from current ship position
+		//var mousePos = GetViewport().GetMousePosition(); //2D mouse Position
+		//var angleTo = Position.AngleToPoint(mousePos); //Find the angle needed to reach the players mouse position from current ship position
 		var forwardVector = new Vector2(Mathf.Cos(GlobalRotation + Mathf.DegToRad(-90)), Mathf.Sin(GlobalRotation + Mathf.DegToRad(-90))).Normalized();
 		var rightVector = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
-		Rotation = angleTo + Mathf.DegToRad(90f);
+		//Rotation = angleTo + Mathf.DegToRad(90f);
+		
+		int rotationDir = 0;
+		float rotationSpeed = 3.5f;
+		
 		if (!velocity.IsZeroApprox())
 		{
 			Vector2 scaled = velocity*-0.002f;
@@ -62,19 +66,21 @@ public partial class ship : RigidBody2D
 		if (Input.IsActionPressed("move_right"))
 		{
 			//velocity.X += 1;
-			ApplyForce(rightVector * EnginePower/2);
+			//ApplyForce(rightVector * EnginePower/2);
+			rotationDir+=1;
 			anyPressed = true;
 		}
 
 		if (Input.IsActionPressed("move_left"))
 		{
-			ApplyForce(rightVector * -EnginePower/2);
+			rotationDir-=1;
+			//ApplyForce(rightVector * -EnginePower/2);
 			anyPressed = true;
 		}
 
 		if (Input.IsActionPressed("move_down"))
 		{
-
+			
 			ApplyForce(-EnginePower * forwardVector);
 			anyPressed = true;
 		}
@@ -104,8 +110,8 @@ public partial class ship : RigidBody2D
 		}
 
 		//Restricts max velocity
-		velocity.X = Mathf.Clamp(velocity.X, -250, 250);
-		velocity.Y = Mathf.Clamp(velocity.Y, -250, 250);
+		velocity.X = Mathf.Clamp(velocity.X, -350, 350);
+		velocity.Y = Mathf.Clamp(velocity.Y, -350, 350);
 
 		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 
@@ -120,6 +126,7 @@ public partial class ship : RigidBody2D
 		}
 		
 		//This code actually updates the position by the velocity
+		Rotation += rotationDir * rotationSpeed * (float)delta;
 		Position += velocity * (float)delta;
 		Position = new Vector2(
 			x: Mathf.Clamp(Position.X, 0, ScreenSize.X),
