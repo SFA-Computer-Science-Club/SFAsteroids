@@ -26,6 +26,6 @@ public partial class Game : Node2D
 	//TODO 3) Add game mechanics when the ship collides
 	public void OnShipHit()
 	{
-		
+		GD.Print("print");
 	}
 }

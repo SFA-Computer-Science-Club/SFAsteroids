@@ -39,6 +39,37 @@ public partial class ship : RigidBody2D
 		timer.OneShot = true;
 		collider = GetNode<CollisionShape2D>("CollisionShape2D");
 		player = GetNode<AudioStreamPlayer2D>("AudioPlayer");
+
+		VisibleOnScreenNotifier2D node = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
+		node.ScreenExited += shipOutOfBounds;
+	}
+
+	private void shipOutOfBounds()
+	{
+		Vector2 ShipPosition = Position;
+		if(ShipPosition.Y < ScreenSize.Y)
+		{
+			ShipPosition.Y += ScreenSize.Y;
+		}
+
+		if(ShipPosition.Y > ScreenSize.Y)
+		{
+			ShipPosition.Y -= ScreenSize.Y;
+		}
+
+		if(ShipPosition.X < ScreenSize.X)
+		{
+			ShipPosition.X += ScreenSize.X;
+		}
+
+		if(ShipPosition.X > ScreenSize.X)
+		{
+			ShipPosition.X -= ScreenSize.X;
+		}
+		
+	
+		SetDeferred(RigidBody2D.PropertyName.Position, ShipPosition);
+
 	}
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -128,9 +159,6 @@ public partial class ship : RigidBody2D
 		//This code actually updates the position by the velocity
 		Rotation += rotationDir * rotationSpeed * (float)delta;
 		Position += velocity * (float)delta;
-		Position = new Vector2(
-			x: Mathf.Clamp(Position.X, 0, ScreenSize.X),
-			y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
-		);
+
 	}
 }

@@ -53,4 +53,6 @@ volume_db = -15.0
 energy = 0.57
 max_distance = 400.0
 
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
