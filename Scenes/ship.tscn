@@ -53,4 +53,8 @@ volume_db = -15.0
 energy = 0.57
 max_distance = 400.0
 
+[node name="GodMode" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
