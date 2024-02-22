@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://b82e86iqh2l42"]
+
+[ext_resource type="Script" path="res://Scenes/MainMenu.cs" id="1_iswcn"]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_iswcn")
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(200, 100)
+offset_left = 900.0
+offset_top = 500.0
+offset_right = 1100.0
+offset_bottom = 600.0
+theme_override_font_sizes/font_size = 64
+text = "PLAY"
+
+[connection signal="pressed" from="Button" to="." method="onButtonPressed"]
