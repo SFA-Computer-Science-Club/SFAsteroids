@@ -21,5 +21,3 @@ position = Vector2(999, 154)
 
 [node name="Ship" parent="." instance=ExtResource("3_ypf53")]
 position = Vector2(336, 219)
-
-[connection signal="Hit" from="Ship" to="." method="OnShipHit"]
