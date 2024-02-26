@@ -6,11 +6,14 @@ public partial class LargeAsteroid : RigidBody2D
 	// Called when the node enters the scene tree for the first time.
 	[Export] public int Health = 30;
 	[Export] public string Type = "LargeAsteroid";
-	private ProgressBar HealthBar;
+	private ProgressBar _healthBar;
+	private Vector2 _screenSize;
 	public override void _Ready()
 	{
-		HealthBar = GetNode<ProgressBar>("HealthBar");
-		HealthBar.Hide();
+		_healthBar = GetNode<ProgressBar>("HealthBar");
+		_healthBar.Hide();
+		_screenSize = GetViewportRect().Size;
+		GetNode<VisibleOnScreenNotifier2D>("OnScreen").ScreenExited += OutOfBounds;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -22,19 +25,46 @@ public partial class LargeAsteroid : RigidBody2D
 	{
 		QueueFree();
 	}
+	
+	private void OutOfBounds()
+	{
+		Vector2 asteroidPosition = Position;
+		if(asteroidPosition.Y < _screenSize.Y)
+		{
+			asteroidPosition.Y += _screenSize.Y;
+		}
+
+		if(asteroidPosition.Y > _screenSize.Y)
+		{
+			asteroidPosition.Y -= _screenSize.Y;
+		}
+
+		if(asteroidPosition.X < _screenSize.X)
+		{
+			asteroidPosition.X += _screenSize.X;
+		}
+
+		if(asteroidPosition.X > _screenSize.X)
+		{
+			asteroidPosition.X -= _screenSize.X;
+		}
+		
+		PhysicsServer2D.BodySetState(GetRid(), PhysicsServer2D.BodyState.Transform, Transform2D.Identity.Translated(asteroidPosition));
+	}
 
 	private void Collision(Node2D node)
 	{
-		projectile proj = (projectile) node;
-		if (proj == null)
+		if (!node.IsInGroup("projectile"))
 		{
 			return;
 		}
 
-		HealthBar.Show();
+		projectile proj = (projectile)node;		
+		
+		_healthBar.Show();
 		
 		Health -= proj.Damage;
-		HealthBar.Value = Health;
+		_healthBar.Value = Health;
 
 		node.QueueFree();
 		

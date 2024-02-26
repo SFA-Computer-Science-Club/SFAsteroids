@@ -7,8 +7,9 @@ public partial class Game : Node2D
 {
 	// Called when the node enters the scene tree for the first time.
 	public Vector2 ScreenSize;
-	private PackedScene ship;
+	private PackedScene PackedShip;
 	private ship ShipInstance;
+	private bool multiplayer = false;	
 
 	[Export] public int MaxLargeAsteroids = 15;
 	private PackedScene lAsteroid;
@@ -17,14 +18,9 @@ public partial class Game : Node2D
 	{
 		ScreenSize = GetViewportRect().Size;
 		//This loads a blank copy of the ship, from here, you have to instantiate it and place it in the world
-		ship = GD.Load<PackedScene>("res://Scenes/ship.tscn");
+		PackedShip = GD.Load<PackedScene>("res://Scenes/ship.tscn");
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
-		spawnShip();
-
-		for (int i = 0; i < MaxLargeAsteroids; i++)
-		{
-			SpawnLargeAsteroid();
-		}
+		StartSinglePlayerGame();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -37,6 +33,29 @@ public partial class Game : Node2D
 		LargeAsteroid asteroid = (LargeAsteroid) lAsteroid.Instantiate();
 		CallDeferred("add_child", asteroid);
 		SpawnRandomLocation(asteroid);
+		GiveRandomVelocity(asteroid, 40);
+	}
+
+	private void GiveRandomVelocity(RigidBody2D body, int multiplier = 1)
+	{
+		Random random = new Random();
+		Vector2 force = new Vector2(random.Next(-1000,1000) * multiplier, random.Next(-1000,1000) * multiplier);
+		
+		body.ApplyForce(force);
+	}
+
+	private void StartSinglePlayerGame()
+	{
+		SpawnShip();
+		SpawnAsteroids();
+	}
+
+	private void SpawnAsteroids()
+	{
+		for (int i = 0; i < MaxLargeAsteroids; i++)
+		{
+			SpawnLargeAsteroid();
+		}
 	}
 	
 	private void SpawnRandomLocation(RigidBody2D node)
@@ -70,15 +89,39 @@ public partial class Game : Node2D
 	}
 
 
-	private void spawnShip()
+	private void SpawnShip()
 	{
-		ShipInstance = (ship) ship.Instantiate();
+		ShipInstance = (ship) PackedShip.Instantiate();
 		CallDeferred("add_sibling", ShipInstance);
 		SpawnRandomLocation(ShipInstance);
+		ShipInstance.ShipDeath += OnShipDeath;
 	}
 
-	public void OnShipDeath(ship ship)
+	private void ClearAsteroids()
 	{
-		ship.Destroy();
+		Array<Node> largeAsteroids = GetTree().GetNodesInGroup("large_asteroid");
+		foreach (Node asteroid in largeAsteroids)
+		{
+			asteroid.QueueFree();
+		}
+		
+		Array<Node> smallAsteroids = GetTree().GetNodesInGroup("small_asteroid");
+		foreach (Node asteroid in smallAsteroids)
+		{
+			asteroid.QueueFree();
+		}
+	}
+
+	private void PlayerLostDisplay(ship diedShip)
+	{
+		
+	}
+
+	private void OnShipDeath(ship diedShip)
+	{
+		diedShip.Destroy();
+		PlayerLostDisplay(diedShip);
+		ClearAsteroids();
+		StartSinglePlayerGame();
 	}
 }

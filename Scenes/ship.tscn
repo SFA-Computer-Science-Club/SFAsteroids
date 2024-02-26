@@ -23,7 +23,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Ship" type="RigidBody2D"]
+[node name="Ship" type="RigidBody2D" groups=["ship"]]
 position = Vector2(2, -2)
 mass = 0.01
 gravity_scale = 0.0

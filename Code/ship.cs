@@ -15,7 +15,7 @@ public partial class ship : RigidBody2D
 	public delegate void HitEventHandler();
 
 	[Signal]
-	public delegate void ShipDeathEventHandler();
+	public delegate void ShipDeathEventHandler(ship diedShip);
 
 	//Health points for the ship
 	[Export]
@@ -40,14 +40,15 @@ public partial class ship : RigidBody2D
 			return;
 		}
 		EmitSignal(SignalName.Hit);
-
-		GodMode.Start();
-		if (body.Name.ToString().Contains("LargeAsteroid")) {
+		
+		if (body.IsInGroup("large_asteroid")) {
 			Health -= 25;
+			GodMode.Start();
 		}
-		else if (body.Name.ToString().Contains("SmallAsteroid"))
+		else if (body.IsInGroup("small_asteroid"))
 		{
 			Health -= 12.5;
+			GodMode.Start();
 		}
 
 		if (Health <= 0)
