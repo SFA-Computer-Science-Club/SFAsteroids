@@ -1,28 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://v4jjl8sh3f0t"]
+[gd_scene load_steps=2 format=3 uid="uid://v4jjl8sh3f0t"]
 
 [ext_resource type="Script" path="res://Code/Game.cs" id="1_xj64d"]
-[ext_resource type="PackedScene" uid="uid://bplab05m38mn8" path="res://Scenes/LargeAsteroid.tscn" id="2_61eot"]
-[ext_resource type="PackedScene" uid="uid://ysearm7kprp" path="res://Scenes/ship.tscn" id="3_ypf53"]
-[ext_resource type="PackedScene" uid="uid://fcx6rc0nvnud" path="res://Scenes/HealthBar.tscn" id="4_u5177"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_xj64d")
-
-[node name="LargeAsteroid" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(715, 356)
-
-[node name="LargeAsteroid2" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(1343, 347)
-
-[node name="LargeAsteroid3" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(991, 656)
-
-[node name="LargeAsteroid4" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(999, 154)
-
-[node name="Ship" parent="." instance=ExtResource("3_ypf53")]
-position = Vector2(336, 219)
-
-[node name="HealthBar" parent="." instance=ExtResource("4_u5177")]
-
-[connection signal="Hit" from="Ship" to="." method="OnShipHit"]

@@ -9,9 +9,13 @@ public partial class ship : RigidBody2D
 	public int EnginePower { get; set; } = 2;
 
 	[Export] public double FireDelay { get; set; } = 0.5;
-
+	[Export] public PackedScene HealthBarScene;
+	public HealthBar HealthBar;
 	[Signal]
 	public delegate void HitEventHandler();
+
+	[Signal]
+	public delegate void ShipDeathEventHandler();
 
 	//Health points for the ship
 	[Export]
@@ -24,29 +28,38 @@ public partial class ship : RigidBody2D
 	private Timer timer = new Timer();
 	private AudioStreamPlayer2D player;
 	private Timer GodMode;
-
-
-	//TODO Ensure that the colliding body is an Asteroid, otherwise, ignore it
+	
 	private void OnBodyEntered(Node2D body)
 	{
+		if (Health <= 0)
+		{
+			return;
+		}
+		if (!GodMode.IsStopped())
+		{
+			return;
+		}
 		EmitSignal(SignalName.Hit);
-		collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 
 		GodMode.Start();
-		if (body.Name == "LargeAsteroid") {
+		if (body.Name.ToString().Contains("LargeAsteroid")) {
 			Health -= 25;
-			GD.Print(Health);
 		}
-		/*else if (body.Name == "SmallAsteroid") {
+		else if (body.Name.ToString().Contains("SmallAsteroid"))
+		{
 			Health -= 12.5;
-			GD.Print(Health);
-		}*/
+		}
 
-	} 
+		if (Health <= 0)
+		{
+			EmitSignal(SignalName.ShipDeath, this);
+		}
+	}
 
-	private void onGodModeEnd() {
-		collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
-		GD.Print("GodMode Over");
+	public void Destroy()
+	{
+		HealthBar.QueueFree();
+		QueueFree();
 	}
 
 	// Called when the node enters the scene tree for the first time.
@@ -61,7 +74,12 @@ public partial class ship : RigidBody2D
 		collider = GetNode<CollisionShape2D>("CollisionShape2D");
 		player = GetNode<AudioStreamPlayer2D>("AudioPlayer");
 		GodMode = GetNode<Timer>("GodMode");
-		GodMode.Timeout += onGodModeEnd;
+		GodMode.OneShot = true;
+		GodMode.WaitTime = 3;
+		HealthBarScene = GD.Load<PackedScene>("res://Scenes/HealthBar.tscn");
+		HealthBar = (HealthBar)HealthBarScene.Instantiate();
+		HealthBar.Adornee = this;
+		CallDeferred("add_sibling", HealthBar);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

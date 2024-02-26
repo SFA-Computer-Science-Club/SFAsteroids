@@ -51,6 +51,8 @@ volume_db = -15.0
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 energy = 0.57
+range_z_min = 128
+range_z_max = 128
 max_distance = 400.0
 
 [node name="GodMode" type="Timer" parent="."]
