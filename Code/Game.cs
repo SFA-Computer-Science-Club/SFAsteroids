@@ -114,7 +114,7 @@ public partial class Game : Node2D
 
 	private void PlayerLostDisplay(ship diedShip)
 	{
-		
+		GD.Print("print");
 	}
 
 	private void OnShipDeath(ship diedShip)

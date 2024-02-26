@@ -55,8 +55,11 @@ range_z_min = 128
 range_z_max = 128
 max_distance = 400.0
 
+
 [node name="GodMode" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
