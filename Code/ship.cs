@@ -1,17 +1,26 @@
 using Godot;
 using System;
 
-public partial class ship : RigidBody2D 
+public partial class ship : RigidBody2D
 {
 
 	//When [Export] is used above a variable, it will show up in the game editor, with a default value of 2
+
 	[Export] 
 	public int EnginePower { get; set; } = 5;
 
 	[Export] public double FireDelay { get; set; } = 0.5;
-
+	[Export] public PackedScene HealthBarScene;
+	public HealthBar HealthBar;
 	[Signal]
 	public delegate void HitEventHandler();
+
+	[Signal]
+	public delegate void ShipDeathEventHandler(ship diedShip);
+
+	//Health points for the ship
+	[Export]
+	public double Health { get; set; } = 100;
 
 	public Vector2 ScreenSize;
 	private RigidBody2D physics;
@@ -19,17 +28,44 @@ public partial class ship : RigidBody2D
 	private PackedScene projectile;
 	private Timer timer = new Timer();
 	private AudioStreamPlayer2D player;
-
-
-	//TODO Ensure that the colliding body is an Asteroid, otherwise, ignore it
+	private Timer GodMode;
+	
 	private void OnBodyEntered(Node2D body)
 	{
+		if (Health <= 0)
+		{
+			return;
+		}
+		if (!GodMode.IsStopped())
+		{
+			return;
+		}
 		EmitSignal(SignalName.Hit);
-		collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		
+		if (body.IsInGroup("large_asteroid")) {
+			Health -= 25;
+			GodMode.Start();
+		}
+		else if (body.IsInGroup("small_asteroid"))
+		{
+			Health -= 12.5;
+			GodMode.Start();
+		}
+
+		if (Health <= 0)
+		{
+			EmitSignal(SignalName.ShipDeath, this);
+		}
 	}
-	
+
+	public void Destroy()
+	{
+		HealthBar.QueueFree();
+		QueueFree();
+	}
+
 	// Called when the node enters the scene tree for the first time.
-	
+
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
@@ -39,6 +75,13 @@ public partial class ship : RigidBody2D
 		timer.OneShot = true;
 		collider = GetNode<CollisionShape2D>("CollisionShape2D");
 		player = GetNode<AudioStreamPlayer2D>("AudioPlayer");
+		GodMode = GetNode<Timer>("GodMode");
+		GodMode.OneShot = true;
+		GodMode.WaitTime = 3;
+		HealthBarScene = GD.Load<PackedScene>("res://Scenes/HealthBar.tscn");
+		HealthBar = (HealthBar)HealthBarScene.Instantiate();
+		HealthBar.Adornee = this;
+		CallDeferred("add_sibling", HealthBar);
 
 		VisibleOnScreenNotifier2D node = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
 		node.ScreenExited += shipOutOfBounds;
@@ -69,9 +112,8 @@ public partial class ship : RigidBody2D
 		
 	
 		SetDeferred(RigidBody2D.PropertyName.Position, ShipPosition);
-
 	}
-	
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
@@ -87,16 +129,17 @@ public partial class ship : RigidBody2D
 		
 		if (!velocity.IsZeroApprox())
 		{
-			Vector2 scaled = velocity*-0.002f;
+			Vector2 scaled = velocity * -0.002f;
 			ApplyForce(scaled);
 		}
-		
+
 		//Movement code
 		bool anyPressed = false;
-		
+
 		if (Input.IsActionPressed("move_right"))
 		{
 			//velocity.X += 1;
+      
 			//ApplyForce(rightVector * EnginePower/2);
 			rotationDir+=1;
 			anyPressed = true;
@@ -118,7 +161,7 @@ public partial class ship : RigidBody2D
 
 		if (Input.IsActionPressed("move_up"))
 		{
-			
+
 			ApplyForce(EnginePower * forwardVector);
 			anyPressed = true;
 		}
@@ -131,7 +174,7 @@ public partial class ship : RigidBody2D
 				timer.Start();
 				var projectileInstance = projectile.Instantiate();
 				AddSibling(projectileInstance);
-			
+
 				var proj = (RigidBody2D)projectileInstance;
 				proj.Position = Position;
 				proj.Rotation = Rotation;
@@ -155,7 +198,7 @@ public partial class ship : RigidBody2D
 		{
 			animatedSprite2D.Frame = 0;
 		}
-		
+
 		//This code actually updates the position by the velocity
 		Rotation += rotationDir * rotationSpeed * (float)delta;
 		Position += velocity * (float)delta;

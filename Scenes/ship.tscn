@@ -23,7 +23,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Ship" type="RigidBody2D"]
+[node name="Ship" type="RigidBody2D" groups=["ship"]]
 position = Vector2(2, -2)
 mass = 0.01
 gravity_scale = 0.0
@@ -51,7 +51,14 @@ volume_db = -15.0
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 energy = 0.57
+range_z_min = 128
+range_z_max = 128
 max_distance = 400.0
+
+
+[node name="GodMode" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 
