@@ -19,7 +19,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dcugc"]
-radius = 5.0
+radius = 6.08276
 
 [sub_resource type="Gradient" id="Gradient_wsujg"]
 offsets = PackedFloat32Array(0, 0.75974)
@@ -40,6 +40,7 @@ gravity_scale = 0.0
 script = ExtResource("1_fhfb1")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.36, 1.44)
 sprite_frames = SubResource("SpriteFrames_ny8ef")
 
 [node name="Collider" type="CollisionShape2D" parent="."]

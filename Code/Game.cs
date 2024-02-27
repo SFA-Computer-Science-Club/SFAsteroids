@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Godot.Collections;
 
-public partial class Game : Node2D
+public partial class Game : CanvasLayer
 {
 	// Called when the node enters the scene tree for the first time.
 	public Vector2 ScreenSize;
@@ -16,7 +16,7 @@ public partial class Game : Node2D
 	
 	public override void _Ready()
 	{
-		ScreenSize = GetViewportRect().Size;
+		ScreenSize = new Vector2(1920, 1080);
 		//This loads a blank copy of the ship, from here, you have to instantiate it and place it in the world
 		PackedShip = GD.Load<PackedScene>("res://Scenes/ship.tscn");
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
@@ -67,8 +67,8 @@ public partial class Game : Node2D
 		int ranY;
 		while (cantSpawn)
 		{
-			ranX = rand.Next(0, (int)GetViewportRect().Size.X);
-			ranY = rand.Next(0, (int)GetViewportRect().Size.Y);
+			ranX = rand.Next(0, (int)ScreenSize.X);
+			ranY = rand.Next(0, (int)ScreenSize.Y);
 
 			spawnPosition = new Vector2(ranX, ranY);
 
