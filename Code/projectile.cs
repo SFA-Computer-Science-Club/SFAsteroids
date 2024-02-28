@@ -5,7 +5,8 @@ public partial class projectile : RigidBody2D
 {
 	// Called when the node enters the scene tree for the first time.
 	[Export] public int Damage = 10;
-	[Export] public string Type = "Projectile";
+
+	public Ship FiredFrom;
 	
 	public override void _Ready()
 	{

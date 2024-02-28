@@ -5,14 +5,16 @@ public partial class LargeAsteroid : RigidBody2D
 {
 	// Called when the node enters the scene tree for the first time.
 	[Export] public int Health = 30;
-	[Export] public string Type = "LargeAsteroid";
+	[Export] public int Points = 5;
+
+	[Signal]
+	public delegate void DestroyedEventHandler(LargeAsteroid asteroid, Ship destructor);
 	private ProgressBar _healthBar;
 	private Vector2 _screenSize;
 	public override void _Ready()
 	{
 		_healthBar = GetNode<ProgressBar>("HealthBar");
 		_healthBar.Hide();
-		_screenSize = GetViewportRect().Size;
 		GetNode<VisibleOnScreenNotifier2D>("OnScreen").ScreenExited += OutOfBounds;
 	}
 
@@ -21,9 +23,20 @@ public partial class LargeAsteroid : RigidBody2D
 	{
 	}
 
-	private void Destroyed()
+	private void OnDestruction(Ship destructor)
 	{
+		EmitSignal(SignalName.Destroyed, this, destructor);
 		QueueFree();
+	}
+
+	public void SetRefScreenSize(Vector2 size)
+	{
+		_screenSize = size;
+	}
+
+	public void ForceOutOfBoundsCheck()
+	{
+		OutOfBounds();
 	}
 	
 	private void OutOfBounds()
@@ -52,6 +65,11 @@ public partial class LargeAsteroid : RigidBody2D
 		PhysicsServer2D.BodySetState(GetRid(), PhysicsServer2D.BodyState.Transform, Transform2D.Identity.Translated(asteroidPosition));
 	}
 
+	public void SetPhysicsPosition(Vector2 pos)
+	{
+		PhysicsServer2D.BodySetState(GetRid(), PhysicsServer2D.BodyState.Transform, Transform2D.Identity.Translated(pos));
+	}
+
 	private void Collision(Node2D node)
 	{
 		if (!node.IsInGroup("projectile"))
@@ -70,7 +88,7 @@ public partial class LargeAsteroid : RigidBody2D
 		
 		if (Health <= 0)
 		{
-			Destroyed();
+			OnDestruction(proj.FiredFrom);
 		}
 	}
 }

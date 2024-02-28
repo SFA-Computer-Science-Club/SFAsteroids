@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using SpaceGame.Code;
 
-public partial class ship : RigidBody2D
+public partial class Ship : RigidBody2D
 {
 
 	//When [Export] is used above a variable, it will show up in the game editor, with a default value of 2
@@ -10,13 +11,13 @@ public partial class ship : RigidBody2D
 	public int EnginePower { get; set; } = 5;
 
 	[Export] public double FireDelay { get; set; } = 0.5;
-	[Export] public PackedScene HealthBarScene;
-	public HealthBar HealthBar;
 	[Signal]
 	public delegate void HitEventHandler();
 
 	[Signal]
-	public delegate void ShipDeathEventHandler(ship diedShip);
+	public delegate void ShipDeathEventHandler(Ship diedShip);
+
+	public Player ShipPlayer;
 
 	//Health points for the ship
 	[Export]
@@ -60,7 +61,6 @@ public partial class ship : RigidBody2D
 
 	public void Destroy()
 	{
-		HealthBar.QueueFree();
 		QueueFree();
 	}
 
@@ -78,10 +78,6 @@ public partial class ship : RigidBody2D
 		GodMode = GetNode<Timer>("GodMode");
 		GodMode.OneShot = true;
 		GodMode.WaitTime = 3;
-		HealthBarScene = GD.Load<PackedScene>("res://Scenes/HealthBar.tscn");
-		HealthBar = (HealthBar)HealthBarScene.Instantiate();
-		HealthBar.Adornee = this;
-		CallDeferred("add_sibling", HealthBar);
 
 		VisibleOnScreenNotifier2D node = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
 		node.ScreenExited += shipOutOfBounds;
@@ -178,7 +174,12 @@ public partial class ship : RigidBody2D
 				var proj = (RigidBody2D)projectileInstance;
 				proj.Position = Position;
 				proj.Rotation = Rotation;
+				
 				proj.ApplyForce(forwardVector * 400);
+
+				global::projectile actualProj = (projectile)projectileInstance;
+				actualProj.FiredFrom = this;
+				
 				player.Play();
 			}
 		}

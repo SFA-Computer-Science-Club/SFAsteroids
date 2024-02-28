@@ -11,8 +11,10 @@ config_version=5
 [application]
 
 config/name="SFAsteroids"
+config/description="Asteroids Game - SFA CS Club"
 run/main_scene="res://Scenes/Game.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/icon="res://Assets/Textures/Asteroid1.png"
 
 [display]
 
@@ -56,6 +58,7 @@ fire={
 [physics]
 
 2d/default_linear_damp=0.0
+2d/default_angular_damp=0.0
 
 [rendering]
 

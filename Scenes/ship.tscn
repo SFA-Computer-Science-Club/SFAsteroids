@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://ysearm7kprp"]
 
-[ext_resource type="Texture2D" uid="uid://bflre70fkdlaw" path="res://Assets/Textures/StaticShip.png" id="1_bl8fq"]
-[ext_resource type="Script" path="res://Code/ship.cs" id="1_oes7u"]
-[ext_resource type="Texture2D" uid="uid://dq2vbx7gx86m" path="res://Assets/Textures/MovingShip.png" id="2_4hlpj"]
-[ext_resource type="AudioStream" uid="uid://ducdhl4iwbwwy" path="res://Assets/Audio/laser.wav" id="4_x4mgl"]
+[ext_resource type="Script" path="res://Code/Ship.cs" id="1_ovfrq"]
+[ext_resource type="Texture2D" uid="uid://bflre70fkdlaw" path="res://Assets/Textures/StaticShip.png" id="2_dgal8"]
+[ext_resource type="Texture2D" uid="uid://dq2vbx7gx86m" path="res://Assets/Textures/MovingShip.png" id="3_d3wgm"]
+[ext_resource type="AudioStream" uid="uid://ducdhl4iwbwwy" path="res://Assets/Audio/laser.wav" id="4_f2flj"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_axi2t"]
 radius = 13.0
@@ -13,10 +13,10 @@ height = 56.0
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_bl8fq")
+"texture": ExtResource("2_dgal8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_4hlpj")
+"texture": ExtResource("3_d3wgm")
 }],
 "loop": true,
 "name": &"default",
@@ -29,7 +29,7 @@ mass = 0.01
 gravity_scale = 0.0
 max_contacts_reported = 4
 contact_monitor = true
-script = ExtResource("1_oes7u")
+script = ExtResource("1_ovfrq")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -46,7 +46,7 @@ position = Vector2(-2, -24)
 rotation = 0.00204443
 
 [node name="AudioPlayer" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_x4mgl")
+stream = ExtResource("4_f2flj")
 volume_db = -15.0
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]

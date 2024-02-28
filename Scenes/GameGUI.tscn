@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://cq620bk73wl86"]
+
+[ext_resource type="Script" path="res://Code/GameGUI.cs" id="1_hb7di"]
+[ext_resource type="PackedScene" uid="uid://btrxyjkfuggy8" path="res://Scenes/HealthBar.tscn" id="2_vtb7p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aj8gl"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.454902, 0, 0.027451, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujmvq"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8cc4f"]
+font_size = 30
+font_color = Color(0.619608, 0, 0.152941, 1)
+outline_size = 6
+
+[node name="GameGui" type="Control"]
+z_index = -5
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_hb7di")
+
+[node name="GamePanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 526.0
+offset_top = 6.0
+offset_right = 1309.0
+offset_bottom = 94.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_aj8gl")
+
+[node name="Time" type="Label" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 537.0
+offset_top = -23.0
+offset_right = 50.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.76, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ujmvq")
+text = "Time
+"
+label_settings = SubResource("LabelSettings_8cc4f")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Points" type="Label" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 16.0
+offset_top = -22.0
+offset_right = -501.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.96, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ujmvq")
+text = "Points
+"
+label_settings = SubResource("LabelSettings_8cc4f")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthBar" parent="GamePanel" instance=ExtResource("2_vtb7p")]
+layout_mode = 1
+offset_left = 275.0
+offset_top = 23.0
+offset_right = 275.0
+offset_bottom = 23.0
+scale = Vector2(0.97267, 1.30137)

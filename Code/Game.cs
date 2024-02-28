@@ -2,23 +2,29 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using Godot.Collections;
+using SpaceGame.Code;
 
 public partial class Game : CanvasLayer
 {
 	// Called when the node enters the scene tree for the first time.
 	public Vector2 ScreenSize;
 	private PackedScene PackedShip;
-	private ship ShipInstance;
-	private bool multiplayer = false;	
+	private Ship ShipInstance;
+	private bool multiplayer = false;
 
-	[Export] public int MaxLargeAsteroids = 15;
+	private PackedScene PackedGameGUI;
+	private GameGUI GameGuiInstance;
+
+	[Export] public int MaxLargeAsteroids = 5;
+	[Export] public double TimeElapsed = 0;
 	private PackedScene lAsteroid;
 	
 	public override void _Ready()
 	{
-		ScreenSize = new Vector2(1920, 1080);
+		ScreenSize = DisplayServer.WindowGetSize();
 		//This loads a blank copy of the ship, from here, you have to instantiate it and place it in the world
-		PackedShip = GD.Load<PackedScene>("res://Scenes/ship.tscn");
+		PackedShip = GD.Load<PackedScene>("res://Scenes/Ship.tscn");
+		PackedGameGUI = GD.Load<PackedScene>("res://Scenes/GameGUI.tscn");
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
 		StartSinglePlayerGame();
 	}
@@ -26,14 +32,39 @@ public partial class Game : CanvasLayer
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		TimeElapsed += delta;
 	}
 
 	private void SpawnLargeAsteroid()
 	{
 		LargeAsteroid asteroid = (LargeAsteroid) lAsteroid.Instantiate();
+		asteroid.SetRefScreenSize(ScreenSize);
 		CallDeferred("add_child", asteroid);
-		SpawnRandomLocation(asteroid);
-		GiveRandomVelocity(asteroid, 40);
+		SpawnRandomLocationOutsideScreen(asteroid);
+		Vector2 randomPoint = PickRandomLocationInGame();
+		GiveVelocity(asteroid, randomPoint, 60);
+		GiveRandomAngularVelocity(asteroid, 50);
+
+		asteroid.Destroyed += OnLargeAsteroidDestroyed;
+	}
+
+	private void OnLargeAsteroidDestroyed(LargeAsteroid asteroid, Ship destructor = null)
+	{
+		AwardPointsToPlayer(destructor.ShipPlayer, asteroid.Points);
+		SpawnLargeAsteroid();
+	}
+
+	private void AwardPointsToPlayer(Player player, int amount)
+	{
+		player.AddPoints(amount);
+	}
+
+	private void GiveVelocity(RigidBody2D body, Vector2 direction, int multiplier = 1)
+	{
+		Vector2 dirToMove = (body.Position - direction).Normalized();
+		Random random = new Random();
+		
+		body.ApplyForce(-dirToMove * (random.Next(300,1000) * multiplier));
 	}
 
 	private void GiveRandomVelocity(RigidBody2D body, int multiplier = 1)
@@ -44,18 +75,88 @@ public partial class Game : CanvasLayer
 		body.ApplyForce(force);
 	}
 
+	private void GiveRandomAngularVelocity(RigidBody2D body, int multiplier = 1)
+	{
+		Random random = new Random();
+		
+		
+		body.ApplyTorque(random.Next(-1000,1000) * multiplier);
+	}
+
 	private void StartSinglePlayerGame()
 	{
-		SpawnShip();
+		
+		Player player = new Player();
+		Ship playerShip = SpawnShip(player);
 		SpawnAsteroids();
+		
+		GameGuiInstance = PackedGameGUI.Instantiate<GameGUI>();
+		CallDeferred("add_child", GameGuiInstance);
+		GameGuiInstance.ForceReady();
+		GameGuiInstance.SetShip(playerShip);
 	}
 
 	private void SpawnAsteroids()
 	{
+		var random = new Random();
 		for (int i = 0; i < MaxLargeAsteroids; i++)
 		{
 			SpawnLargeAsteroid();
 		}
+	}
+
+	private void SpawnRandomLocationOutsideScreen(RigidBody2D node)
+	{
+		Vector2 spawnPosition = new Vector2();
+		bool cantSpawn = true;
+		Random rand = new Random();
+		int ranX;
+		int ranY;
+		while (cantSpawn)
+		{
+			if (rand.Next(0, 2) == 0)
+			{
+				ranX = rand.Next(-100, 0);
+			}
+			else
+			{
+				ranX = rand.Next((int)ScreenSize.X, (int)ScreenSize.X + 100);
+			}
+
+			if (rand.Next(0, 2) == 0)
+			{
+				ranY = rand.Next(-100, 0);
+			}
+			else
+			{
+				ranY = rand.Next((int)ScreenSize.Y, (int)ScreenSize.Y + 100);
+			}
+
+			spawnPosition = new Vector2(ranX, ranY);
+
+			node.Position = spawnPosition;
+
+			Array<Node2D> collisions = node.GetCollidingBodies();
+
+			if (collisions.Count == 0)
+			{
+				cantSpawn = false;
+				if (node.IsInGroup("large_asteroid"))
+				{
+					LargeAsteroid ast = (LargeAsteroid)node;
+					ast.SetPhysicsPosition(spawnPosition);
+				}
+			}
+			else
+			{
+			}
+		}
+	}
+
+	private Vector2 PickRandomLocationInGame()
+	{
+		var rand = new Random();
+		return new Vector2(rand.Next(0, (int)ScreenSize.X), rand.Next(0,(int)ScreenSize.Y));
 	}
 	
 	private void SpawnRandomLocation(RigidBody2D node)
@@ -85,16 +186,18 @@ public partial class Game : CanvasLayer
 				GD.Print("Cant spawn, trying again");
 			}
 		}
-		
 	}
 
 
-	private void SpawnShip()
+	private Ship SpawnShip(Player player = null)
 	{
-		ShipInstance = (ship) PackedShip.Instantiate();
-		CallDeferred("add_sibling", ShipInstance);
+		ShipInstance = (Ship) PackedShip.Instantiate();
+		ShipInstance.ShipPlayer = player;
+		CallDeferred("add_child", ShipInstance);
 		SpawnRandomLocation(ShipInstance);
 		ShipInstance.ShipDeath += OnShipDeath;
+
+		return ShipInstance;
 	}
 
 	private void ClearAsteroids()
@@ -112,16 +215,16 @@ public partial class Game : CanvasLayer
 		}
 	}
 
-	private void PlayerLostDisplay(ship diedShip)
+	private void PlayerLostDisplay(Ship diedShip)
 	{
-		GD.Print("print");
 	}
 
-	private void OnShipDeath(ship diedShip)
+	private void OnShipDeath(Ship diedShip)
 	{
 		diedShip.Destroy();
 		PlayerLostDisplay(diedShip);
 		ClearAsteroids();
+		TimeElapsed = 0;
 		StartSinglePlayerGame();
 	}
 }
