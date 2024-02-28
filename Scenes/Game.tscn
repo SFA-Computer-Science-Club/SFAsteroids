@@ -1,25 +1,24 @@
 [gd_scene load_steps=4 format=3 uid="uid://v4jjl8sh3f0t"]
 
 [ext_resource type="Script" path="res://Code/Game.cs" id="1_xj64d"]
-[ext_resource type="PackedScene" uid="uid://bplab05m38mn8" path="res://Scenes/LargeAsteroid.tscn" id="2_61eot"]
-[ext_resource type="PackedScene" uid="uid://ysearm7kprp" path="res://Scenes/ship.tscn" id="3_ypf53"]
+[ext_resource type="Shader" path="res://Assets/Shaders/CRT.gdshader" id="2_gwcex"]
 
-[node name="Game" type="Node2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fp1c7"]
+shader = ExtResource("2_gwcex")
+shader_parameter/vertJerkOpt = 0.2
+shader_parameter/vertMovementOpt = 0.0
+shader_parameter/bottomStaticOpt = 0.0
+shader_parameter/bottomStaticStrenth = 0.7
+shader_parameter/scalinesOpt = 0.8
+shader_parameter/rgbOffsetOpt = 0.2
+shader_parameter/horzFuzzOpt = 0.15
+
+[node name="Game" type="CanvasLayer"]
 script = ExtResource("1_xj64d")
 
-[node name="LargeAsteroid" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(715, 356)
-
-[node name="LargeAsteroid2" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(1343, 347)
-
-[node name="LargeAsteroid3" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(991, 656)
-
-[node name="LargeAsteroid4" parent="." instance=ExtResource("2_61eot")]
-position = Vector2(999, 154)
-
-[node name="Ship" parent="." instance=ExtResource("3_ypf53")]
-position = Vector2(336, 219)
-
-[connection signal="Hit" from="Ship" to="." method="OnShipHit"]
+[node name="Shader" type="ColorRect" parent="."]
+z_index = 2
+material = SubResource("ShaderMaterial_fp1c7")
+offset_right = 1914.0
+offset_bottom = 1073.0
+color = Color(0, 0, 0, 1)
