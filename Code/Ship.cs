@@ -46,11 +46,18 @@ public partial class Ship : RigidBody2D
 		if (body.IsInGroup("large_asteroid")) {
 			Health -= 25;
 			GodMode.Start();
+			GetNode<AudioStreamPlayer2D>("DamageSound").Play();
 		}
 		else if (body.IsInGroup("small_asteroid"))
 		{
 			Health -= 12.5;
 			GodMode.Start();
+			GetNode<AudioStreamPlayer2D>("DamageSound").Play();
+		}
+
+		if (Health <= 25)
+		{
+			GetNode<AudioStreamPlayer2D>("LowHealthSound").Play();
 		}
 
 		if (Health <= 0)

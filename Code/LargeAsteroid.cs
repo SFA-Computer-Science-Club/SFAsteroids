@@ -84,6 +84,7 @@ public partial class LargeAsteroid : RigidBody2D
 		Health -= proj.Damage;
 		_healthBar.Value = Health;
 
+		GetNode<AudioStreamPlayer2D>("HitSound").Play();
 		node.QueueFree();
 		
 		if (Health <= 0)
