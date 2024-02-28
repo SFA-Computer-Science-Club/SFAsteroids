@@ -5,7 +5,7 @@ using System.Reflection;
 public partial class MainMenu : Node2D
 {
 	private PackedScene gameScene;
-	private Node2D gameInstance;
+	private CanvasLayer gameInstance;
 	private Button button;
 	private Node2D title;
 	// Called when the node enters the scene tree for the first time.
@@ -23,7 +23,7 @@ public partial class MainMenu : Node2D
 
 	private void onButtonPressed()
 	{
-		gameInstance = (Node2D)gameScene.Instantiate();
+		gameInstance = (CanvasLayer)gameScene.Instantiate();
 		AddChild(gameInstance);
 		button.Hide();
 		title.Hide();
