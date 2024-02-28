@@ -135,7 +135,7 @@ public partial class Ship : RigidBody2D
 		if (Input.IsActionPressed("move_right"))
 		{
 			//velocity.X += 1;
-      
+	  
 			//ApplyForce(rightVector * EnginePower/2);
 			rotationDir+=1;
 			anyPressed = true;

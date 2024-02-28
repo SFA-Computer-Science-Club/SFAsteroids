@@ -18,6 +18,7 @@ public partial class Game : CanvasLayer
 	[Export] public int MaxLargeAsteroids = 5;
 	[Export] public double TimeElapsed = 0;
 	private PackedScene lAsteroid;
+	private PackedScene sAsteroid;
 	
 	public override void _Ready()
 	{
@@ -26,6 +27,7 @@ public partial class Game : CanvasLayer
 		PackedShip = GD.Load<PackedScene>("res://Scenes/Ship.tscn");
 		PackedGameGUI = GD.Load<PackedScene>("res://Scenes/GameGUI.tscn");
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
+		sAsteroid = GD.Load<PackedScene>("res://Scenes/SmallAsteroid.tscn");
 		StartSinglePlayerGame();
 	}
 
@@ -47,10 +49,30 @@ public partial class Game : CanvasLayer
 
 		asteroid.Destroyed += OnLargeAsteroidDestroyed;
 	}
+	
+	private void SpawnSmallAsteroidFromLargeAsteroid(LargeAsteroid oldAsteroid){
+		SmallAsteroid asteroid = (SmallAsteroid) sAsteroid.Instantiate();
+		asteroid.SetRefScreenSize(ScreenSize);
+		CallDeferred("add_child", asteroid);
+		asteroid.Position = oldAsteroid.Position;
+		//Vector2 randomPoint = PickRandomLocationInGame();
+		//GiveVelocity(asteroid, oldAsteroid.LinearVelocity * 10);
+		asteroid.LinearVelocity = oldAsteroid.LinearVelocity / 2;
+		GiveRandomAngularVelocity(asteroid, 50);
+
+		asteroid.Destroyed += OnSmallAsteroidDestroyed;
+	}
+
+	private void OnSmallAsteroidDestroyed(SmallAsteroid asteroid, Ship destructor = null)
+	{
+		AwardPointsToPlayer(destructor.ShipPlayer, asteroid.Points);
+	}
 
 	private void OnLargeAsteroidDestroyed(LargeAsteroid asteroid, Ship destructor = null)
 	{
 		AwardPointsToPlayer(destructor.ShipPlayer, asteroid.Points);
+		SpawnSmallAsteroidFromLargeAsteroid(asteroid);
+		SpawnSmallAsteroidFromLargeAsteroid(asteroid);
 		SpawnLargeAsteroid();
 	}
 
