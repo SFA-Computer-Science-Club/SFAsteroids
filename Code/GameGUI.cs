@@ -32,6 +32,7 @@ public partial class GameGUI : Control
 	{
 		Node parent = GetParent();
 
+		GetNode<Label>("GamePanel/FPS").Text = "FPS: " + Engine.GetFramesPerSecond();
 		if (parent is Game)
 		{
 			Game game = (Game)parent;
