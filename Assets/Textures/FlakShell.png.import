@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjnqo3h8d3aea"
-path="res://.godot/imported/Title.png-699150392c8a9e1c9334b6b70fe73d6b.ctex"
+uid="uid://n4gl4v66gx5c"
+path="res://.godot/imported/FlakShell.png-45894d30649801f57f304d0f4bad493a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/Title.png"
-dest_files=["res://.godot/imported/Title.png-699150392c8a9e1c9334b6b70fe73d6b.ctex"]
+source_file="res://Assets/Textures/FlakShell.png"
+dest_files=["res://.godot/imported/FlakShell.png-45894d30649801f57f304d0f4bad493a.ctex"]
 
 [params]
 

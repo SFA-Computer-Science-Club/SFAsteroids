@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://bi4334aliyt30"]
+
+[ext_resource type="Texture2D" uid="uid://n4gl4v66gx5c" path="res://Assets/Textures/FlakShell.png" id="1_djotu"]
+[ext_resource type="Script" path="res://Code/FlakProjectile.cs" id="1_wwull"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2l4pf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_djotu")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_56e2l"]
+radius = 52.1536
+
+[node name="FlakProjectile" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 2
+mass = 0.02
+gravity_scale = 0.0
+script = ExtResource("1_wwull")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.36, 1.44)
+sprite_frames = SubResource("SpriteFrames_2l4pf")
+
+[node name="DetectionRadius" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_56e2l")
+debug_color = Color(0.647059, 0.482353, 0.541176, 0.419608)
+
+[node name="DamageRadius" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_56e2l")
+debug_color = Color(0.647059, 0.482353, 0.541176, 0.419608)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

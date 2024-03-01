@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cq620bk73wl86"]
+[gd_scene load_steps=7 format=3 uid="uid://cq620bk73wl86"]
 
 [ext_resource type="Script" path="res://Code/GameGUI.cs" id="1_hb7di"]
 [ext_resource type="PackedScene" uid="uid://btrxyjkfuggy8" path="res://Scenes/HealthBar.tscn" id="2_vtb7p"]
@@ -22,6 +22,8 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 font_size = 30
 font_color = Color(0.619608, 0, 0.152941, 1)
 outline_size = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_acx1s"]
 
 [node name="GameGui" type="Control"]
 z_index = -5
@@ -84,3 +86,12 @@ offset_top = 23.0
 offset_right = 275.0
 offset_bottom = 23.0
 scale = Vector2(0.97267, 1.30137)
+
+[node name="FPS" type="Label" parent="GamePanel"]
+layout_mode = 0
+offset_left = -486.0
+offset_top = 13.0
+offset_right = -446.0
+offset_bottom = 36.0
+text = "FPS:"
+label_settings = SubResource("LabelSettings_acx1s")

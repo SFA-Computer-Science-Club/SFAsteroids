@@ -1,6 +1,3 @@
-
-
-
 shader_type canvas_item;
 
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
@@ -109,11 +106,11 @@ void fragment(){
 	
 	float staticVal = 0.0;
 	
-	for (float y = -1.0; y <= 1.0; y += 1.0) {
+	//for (float y = -1.0; y <= 1.0; y += 1.0) {
 		float maxDist = 5.0/200.0;
-		float dist = y/200.0;
+		float dist = 0.0;
 		staticVal += staticV(vec2(uv.x,uv.y+dist), TIME)*(maxDist-abs(dist))*1.5;
-	}
+	//}
 	
 	staticVal *= bottomStaticOpt;
 	
