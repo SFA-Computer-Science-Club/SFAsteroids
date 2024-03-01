@@ -68,10 +68,7 @@ public partial class SmallAsteroid : RigidBody2D
 
 		projectile proj = (projectile)node;		
 		
-		_healthBar.Show();
-		
 		Health -= proj.Damage;
-		_healthBar.Value = Health;
 
 		node.QueueFree();
 		

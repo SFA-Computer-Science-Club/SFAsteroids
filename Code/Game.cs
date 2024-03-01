@@ -54,9 +54,10 @@ public partial class Game : CanvasLayer
 		SmallAsteroid asteroid = (SmallAsteroid) sAsteroid.Instantiate();
 		asteroid.SetRefScreenSize(ScreenSize);
 		CallDeferred("add_child", asteroid);
-		asteroid.Position = oldAsteroid.Position;
-		//Vector2 randomPoint = PickRandomLocationInGame();
-		//GiveVelocity(asteroid, oldAsteroid.LinearVelocity * 10);
+
+
+		asteroid.Position = oldAsteroid.Position + new Vector2(new Random().Next(-20,20),new Random().Next(-20,20));
+		
 		asteroid.LinearVelocity = oldAsteroid.LinearVelocity / 2;
 		GiveRandomAngularVelocity(asteroid, 50);
 
