@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bflre70fkdlaw" path="res://Assets/Textures/StaticShip.png" id="2_hwibc"]
 [ext_resource type="Texture2D" uid="uid://dq2vbx7gx86m" path="res://Assets/Textures/MovingShip.png" id="3_y5qsb"]
 [ext_resource type="AudioStream" uid="uid://ducdhl4iwbwwy" path="res://Assets/Audio/laser.wav" id="4_6ayqn"]
-[ext_resource type="AudioStream" uid="uid://baep28g6vdjea" path="res://Assets/Audio/LowHealthWarning.wav" id="5_jycsn"]
-[ext_resource type="AudioStream" uid="uid://enj3vbhfeoyp" path="res://Assets/Audio/DamageSound.wav" id="6_8tqwr"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/LowHealthWarning.wav" id="5_jycsn"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/DamageSound.wav" id="6_8tqwr"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_axi2t"]
 radius = 13.0
