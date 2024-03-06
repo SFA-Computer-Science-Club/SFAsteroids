@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ysearm7kprp"]
+[gd_scene load_steps=10 format=3 uid="uid://ysearm7kprp"]
 
 [ext_resource type="Script" path="res://Code/Ship.cs" id="1_etxhs"]
 [ext_resource type="Texture2D" uid="uid://bflre70fkdlaw" path="res://Assets/Textures/StaticShip.png" id="2_hwibc"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://ducdhl4iwbwwy" path="res://Assets/Audio/laser.wav" id="4_6ayqn"]
 [ext_resource type="AudioStream" uid="uid://baep28g6vdjea" path="res://Assets/Audio/LowHealthWarning.wav" id="5_jycsn"]
 [ext_resource type="AudioStream" uid="uid://enj3vbhfeoyp" path="res://Assets/Audio/DamageSound.wav" id="6_8tqwr"]
+[ext_resource type="AudioStream" uid="uid://c126xjd17pknq" path="res://Assets/Audio/FlakShot.wav" id="7_doab6"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_axi2t"]
 radius = 13.0
@@ -69,5 +70,8 @@ volume_db = -14.991
 
 [node name="DamageSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6_8tqwr")
+
+[node name="FlakFire" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_doab6")
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]

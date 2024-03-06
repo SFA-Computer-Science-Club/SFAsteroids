@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bi4334aliyt30"]
+[gd_scene load_steps=7 format=3 uid="uid://bi4334aliyt30"]
 
 [ext_resource type="Texture2D" uid="uid://n4gl4v66gx5c" path="res://Assets/Textures/FlakShell.png" id="1_djotu"]
 [ext_resource type="Script" path="res://Code/FlakProjectile.cs" id="1_wwull"]
+[ext_resource type="AudioStream" uid="uid://bxxvskgsuxtnq" path="res://Assets/Audio/FlakBurst.wav" id="3_k2nw0"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2l4pf"]
 animations = [{
@@ -17,11 +18,16 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_56e2l"]
 radius = 52.1536
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_cqhlo"]
+radius = 27.2029
+
 [node name="FlakProjectile" type="RigidBody2D"]
 collision_layer = 2
 collision_mask = 2
 mass = 0.02
 gravity_scale = 0.0
+max_contacts_reported = 50
+contact_monitor = true
 script = ExtResource("1_wwull")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -34,9 +40,20 @@ scale = Vector2(0.5, 0.5)
 shape = SubResource("CircleShape2D_56e2l")
 debug_color = Color(0.647059, 0.482353, 0.541176, 0.419608)
 
-[node name="DamageRadius" type="CollisionShape2D" parent="."]
+[node name="DamageRadius" type="Area2D" parent="."]
 position = Vector2(0, -1)
-shape = SubResource("CircleShape2D_56e2l")
-debug_color = Color(0.647059, 0.482353, 0.541176, 0.419608)
+scale = Vector2(5, 5)
+collision_layer = 2
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageRadius"]
+shape = SubResource("CircleShape2D_cqhlo")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="FlakBurst" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_k2nw0")
+volume_db = 1.874
+
+[connection signal="body_entered" from="." to="." method="Collision"]

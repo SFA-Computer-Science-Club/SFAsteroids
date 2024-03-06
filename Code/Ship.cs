@@ -18,6 +18,7 @@ public partial class Ship : RigidBody2D
 	public delegate void ShipDeathEventHandler(Ship diedShip);
 
 	public Player ShipPlayer;
+	private int SelectedWeapon = 1;
 
 	//Health points for the ship
 	[Export]
@@ -27,6 +28,7 @@ public partial class Ship : RigidBody2D
 	private RigidBody2D physics;
 	private CollisionShape2D collider;
 	private PackedScene projectile;
+	private PackedScene Flak;
 	private Timer timer = new Timer();
 	private AudioStreamPlayer2D player;
 	private Timer GodMode;
@@ -77,6 +79,7 @@ public partial class Ship : RigidBody2D
 	{
 		ScreenSize = GetViewportRect().Size;
 		projectile = GD.Load<PackedScene>("res://Scenes/projectile.tscn");
+		Flak = GD.Load<PackedScene>("res://Scenes/FlakProjectile.tscn");
 		AddChild(timer);
 		timer.WaitTime = 0.25f;
 		timer.OneShot = true;
@@ -88,6 +91,25 @@ public partial class Ship : RigidBody2D
 
 		VisibleOnScreenNotifier2D node = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
 		node.ScreenExited += shipOutOfBounds;
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		base._Input(@event);
+
+		if (@event.IsActionPressed("player_1_switch_weapons"))
+		{
+			if (SelectedWeapon == 1)
+			{
+				SelectedWeapon = 2;
+				timer.WaitTime = 0.75f;
+			}
+			else
+			{
+				SelectedWeapon = 1;
+				timer.WaitTime = 0.25f;
+			}
+		}
 	}
 
 	private void shipOutOfBounds()
@@ -172,23 +194,7 @@ public partial class Ship : RigidBody2D
 		//Handles firing
 		if (Input.IsActionPressed("fire"))
 		{
-			if (timer.IsStopped())
-			{
-				timer.Start();
-				var projectileInstance = projectile.Instantiate();
-				AddSibling(projectileInstance);
-
-				var proj = (RigidBody2D)projectileInstance;
-				proj.Position = Position;
-				proj.Rotation = Rotation;
-				
-				proj.ApplyForce(forwardVector * 400);
-
-				global::projectile actualProj = (projectile)projectileInstance;
-				actualProj.FiredFrom = this;
-				
-				player.Play();
-			}
+			Fire(forwardVector);
 		}
 
 		//Restricts max velocity
@@ -211,5 +217,49 @@ public partial class Ship : RigidBody2D
 		Rotation += rotationDir * rotationSpeed * (float)delta;
 		Position += velocity * (float)delta;
 
+	}
+	
+	private void Fire(Vector2 forwardVector)
+	{
+		if (SelectedWeapon == 1)
+		{
+			if (timer.IsStopped())
+			{
+				timer.Start();
+				var projectileInstance = projectile.Instantiate();
+				AddSibling(projectileInstance);
+
+				var proj = (RigidBody2D)projectileInstance;
+				proj.Position = Position;
+				proj.Rotation = Rotation;
+				
+				proj.ApplyForce(forwardVector * 400);
+
+				global::projectile actualProj = (projectile)projectileInstance;
+				actualProj.FiredFrom = this;
+				
+				player.Play();
+			}
+		}
+		else
+		{
+			if (timer.IsStopped())
+			{
+				timer.Start();
+				var projectileInstance = Flak.Instantiate();
+				AddSibling(projectileInstance);
+
+				var proj = (RigidBody2D)projectileInstance;
+				proj.Position = Position;
+				proj.Rotation = Rotation;
+				
+				proj.ApplyForce(forwardVector * 600);
+
+				FlakProjectile actualProj = (FlakProjectile)projectileInstance;
+				actualProj.FiredFrom = this;
+
+				GetNode<AudioStreamPlayer2D>("FlakFire").Play();
+			}
+		}
 	}
 }

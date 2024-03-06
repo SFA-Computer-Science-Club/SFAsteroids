@@ -25,8 +25,23 @@ public partial class LargeAsteroid : RigidBody2D
 
 	private void OnDestruction(Ship destructor)
 	{
+		if (destructor == null)
+		{
+			QueueFree();
+			return;
+		}
 		EmitSignal(SignalName.Destroyed, this, destructor);
 		QueueFree();
+	}
+
+	public void Damage(int num, Ship damager)
+	{
+		Health -= num;
+
+		if (Health <= 0)
+		{
+			OnDestruction(damager);
+		}
 	}
 
 	public void SetRefScreenSize(Vector2 size)

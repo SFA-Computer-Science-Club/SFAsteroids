@@ -15,7 +15,7 @@ public partial class Game : CanvasLayer
 	private PackedScene PackedGameGUI;
 	private GameGUI GameGuiInstance;
 
-	[Export] public int MaxLargeAsteroids = 5;
+	[Export] public int MaxLargeAsteroids = 20;
 	[Export] public double TimeElapsed = 0;
 	private PackedScene lAsteroid;
 	
@@ -37,6 +37,7 @@ public partial class Game : CanvasLayer
 
 	private void SpawnLargeAsteroid()
 	{
+		GD.Print(lAsteroid);
 		LargeAsteroid asteroid = (LargeAsteroid) lAsteroid.Instantiate();
 		asteroid.SetRefScreenSize(ScreenSize);
 		CallDeferred("add_child", asteroid);
@@ -198,6 +199,11 @@ public partial class Game : CanvasLayer
 		ShipInstance.ShipDeath += OnShipDeath;
 
 		return ShipInstance;
+	}
+
+	public bool IsSinglePlayer()
+	{
+		return !multiplayer;
 	}
 
 	private void ClearAsteroids()

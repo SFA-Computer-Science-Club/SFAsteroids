@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bplab05m38mn8"]
 
 [ext_resource type="Texture2D" uid="uid://dee8d012a15e8" path="res://Assets/Textures/Asteroid1.png" id="1_cir8m"]
-[ext_resource type="Script" path="res://Code/LargeAsteroid.cs" id="1_o7xh7"]
+[ext_resource type="Script" path="res://FlakProjectile.cs" id="1_oxlkc"]
 [ext_resource type="AudioStream" uid="uid://dr3smf3c8uspu" path="res://Assets/Audio/AsteroidDestruction.wav" id="3_0vsqj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7nuf8"]
@@ -14,8 +14,8 @@ mass = 4.0
 gravity_scale = 0.0
 max_contacts_reported = 15
 contact_monitor = true
-script = ExtResource("1_o7xh7")
-Health = 20
+script = ExtResource("1_oxlkc")
+Damage = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_cir8m")
