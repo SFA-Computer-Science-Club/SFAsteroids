@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using SpaceGame.Code;
+using SpaceGame.Code.Helpers;
 
 public partial class Ship : RigidBody2D
 {
@@ -10,6 +11,8 @@ public partial class Ship : RigidBody2D
 	[Export] 
 	public int EnginePower { get; set; } = 5;
 
+	[Export] public bool ShowName { get; set; } = false;
+	
 	[Export] public double FireDelay { get; set; } = 0.5;
 	[Signal]
 	public delegate void HitEventHandler();
@@ -18,10 +21,11 @@ public partial class Ship : RigidBody2D
 	public delegate void ShipDeathEventHandler(Ship diedShip);
 
 	public Player ShipPlayer;
-
-	//Health points for the ship
+	
 	[Export]
 	public double Health { get; set; } = 100;
+	
+	public GameContext GameContext { get; set; }
 
 	public Vector2 ScreenSize;
 	private RigidBody2D physics;
@@ -30,6 +34,8 @@ public partial class Ship : RigidBody2D
 	private Timer timer = new Timer();
 	private AudioStreamPlayer2D player;
 	private Timer GodMode;
+	private Sprite2D _nameSprite;
+	private Label _nameLabel;
 	
 	private void OnBodyEntered(Node2D body)
 	{
@@ -83,6 +89,9 @@ public partial class Ship : RigidBody2D
 		collider = GetNode<CollisionShape2D>("CollisionShape2D");
 		player = GetNode<AudioStreamPlayer2D>("AudioPlayer");
 		GodMode = GetNode<Timer>("GodMode");
+		_nameSprite = GetNode<Sprite2D>("NameSprite");
+		_nameLabel = GetNode<Label>("NameSprite/NameLabel");
+		_nameLabel.Text = ShipPlayer.PlayerName;
 		GodMode.OneShot = true;
 		GodMode.WaitTime = 3;
 
@@ -117,15 +126,23 @@ public partial class Ship : RigidBody2D
 		SetDeferred(RigidBody2D.PropertyName.Position, ShipPosition);
 	}
 
+	private void HandleNameRotation()
+	{
+		if (!ShowName || _nameSprite == null)
+		{
+			return;
+		}
+		
+		_nameSprite.SetGlobalRotation(0);
+	}
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		var velocity = LinearVelocity; // The player's movement vector.
-		//var mousePos = GetViewport().GetMousePosition(); //2D mouse Position
-		//var angleTo = Position.AngleToPoint(mousePos); //Find the angle needed to reach the players mouse position from current ship position
 		var forwardVector = new Vector2(Mathf.Cos(GlobalRotation + Mathf.DegToRad(-90)), Mathf.Sin(GlobalRotation + Mathf.DegToRad(-90))).Normalized();
-		var rightVector = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
-		//Rotation = angleTo + Mathf.DegToRad(90f);
+		
+		HandleNameRotation();
 		
 		int rotationDir = 0;
 		float rotationSpeed = 3.5f;
@@ -139,30 +156,26 @@ public partial class Ship : RigidBody2D
 		//Movement code
 		bool anyPressed = false;
 
-		if (Input.IsActionPressed("move_right"))
+		if (Input.IsActionPressed("player_1_right"))
 		{
-			//velocity.X += 1;
-      
-			//ApplyForce(rightVector * EnginePower/2);
 			rotationDir+=1;
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("move_left"))
+		if (Input.IsActionPressed("player_1_left"))
 		{
 			rotationDir-=1;
-			//ApplyForce(rightVector * -EnginePower/2);
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("move_down"))
+		if (Input.IsActionPressed("player_1_down"))
 		{
 			
 			ApplyForce(-EnginePower * forwardVector);
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("move_up"))
+		if (Input.IsActionPressed("player_1_up"))
 		{
 
 			ApplyForce(EnginePower * forwardVector);
@@ -170,7 +183,7 @@ public partial class Ship : RigidBody2D
 		}
 
 		//Handles firing
-		if (Input.IsActionPressed("fire"))
+		if (Input.IsActionPressed("player_1_fire"))
 		{
 			if (timer.IsStopped())
 			{

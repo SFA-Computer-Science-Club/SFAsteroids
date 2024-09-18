@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Godot.Collections;
 using SpaceGame.Code;
+using SpaceGame.Code.Helpers;
 
 public partial class Game : CanvasLayer
 {
@@ -10,10 +11,11 @@ public partial class Game : CanvasLayer
 	public Vector2 ScreenSize;
 	private PackedScene PackedShip;
 	private Ship ShipInstance;
-	private bool multiplayer = false;
+	private bool _multiplayer;
 
 	private PackedScene PackedGameGUI;
-	private GameGUI GameGuiInstance;
+	private GameGUI SinglePlayerGUI;
+	//private MultiPlayerGameGUI MultiPlayerGUI;
 
 	[Export] public int MaxLargeAsteroids = 5;
 	[Export] public double TimeElapsed = 0;
@@ -24,15 +26,28 @@ public partial class Game : CanvasLayer
 		ScreenSize = DisplayServer.WindowGetSize();
 		//This loads a blank copy of the ship, from here, you have to instantiate it and place it in the world
 		PackedShip = GD.Load<PackedScene>("res://Scenes/Ship.tscn");
-		PackedGameGUI = GD.Load<PackedScene>("res://Scenes/GameGUI.tscn");
+		PackedGameGUI = GD.Load<PackedScene>("res://Scenes/UI/GameGUI.tscn");
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
-		StartSinglePlayerGame();
+
+		if (_multiplayer)
+		{
+			StartMultiPlayerGame();
+		}
+		else
+		{
+			StartSinglePlayerGame();
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		TimeElapsed += delta;
+	}
+
+	public void SetMultiplayer(bool value)
+	{
+		_multiplayer = value;
 	}
 
 	private void SpawnLargeAsteroid()
@@ -83,6 +98,33 @@ public partial class Game : CanvasLayer
 		body.ApplyTorque(random.Next(-1000,1000) * multiplier);
 	}
 
+	private void StartMultiPlayerGame()
+	{
+		Player player = new Player();
+		Player player2 = new Player();
+		
+		player.PlayerName = "Player 1";
+		player2.PlayerName = "Player 2";
+		Ship player1Ship = SpawnShip(player);
+		Ship player2Ship = SpawnShip(player2);
+		GameContext gameContext = new GameContext()
+		{
+			GameType = GameType.Multiplayer,
+			Ships = new List<Ship>(){player1Ship, player2Ship}	
+		};
+		SpawnAsteroids();
+
+		player1Ship.GameContext = gameContext;
+		player2Ship.GameContext = gameContext;
+		player1Ship.ShowName = true;
+		player2Ship.ShowName = true;	
+		
+		SinglePlayerGUI = PackedGameGUI.Instantiate<GameGUI>();
+		CallDeferred("add_child", SinglePlayerGUI);
+		SinglePlayerGUI.ForceReady();
+		SinglePlayerGUI.SetShip(player1Ship);
+	}
+
 	private void StartSinglePlayerGame()
 	{
 		
@@ -90,10 +132,10 @@ public partial class Game : CanvasLayer
 		Ship playerShip = SpawnShip(player);
 		SpawnAsteroids();
 		
-		GameGuiInstance = PackedGameGUI.Instantiate<GameGUI>();
-		CallDeferred("add_child", GameGuiInstance);
-		GameGuiInstance.ForceReady();
-		GameGuiInstance.SetShip(playerShip);
+		SinglePlayerGUI = PackedGameGUI.Instantiate<GameGUI>();
+		CallDeferred("add_child", SinglePlayerGUI);
+		SinglePlayerGUI.ForceReady();
+		SinglePlayerGUI.SetShip(playerShip);
 	}
 
 	private void SpawnAsteroids()

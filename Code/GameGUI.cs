@@ -1,10 +1,13 @@
 using Godot;
 using System;
 using SpaceGame.Code;
+using SpaceGame.Code.Helpers;
 
 public partial class GameGUI : Control
 {
-	// Called when the node enters the scene tree for the first time.
+	
+	public GameContext GameContext { get; set; }
+	
 	private Ship ship;
 	private HealthBar ShipHealthBar;
 	private Label TimeLabel;
@@ -42,7 +45,7 @@ public partial class GameGUI : Control
 
 		if (ship != null)
 		{
-			PointsLabel.Text = ship.ShipPlayer.points + " points";
+			PointsLabel.Text = ship.ShipPlayer.Points + " points";
 		}
 	}
 }

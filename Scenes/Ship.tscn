@@ -29,8 +29,8 @@ animations = [{
 position = Vector2(2, -2)
 mass = 0.01
 gravity_scale = 0.0
-max_contacts_reported = 4
 contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("1_etxhs")
 metadata/_edit_group_ = true
 
@@ -69,5 +69,15 @@ volume_db = -14.991
 
 [node name="DamageSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6_8tqwr")
+
+[node name="NameSprite" type="Sprite2D" parent="."]
+position = Vector2(-2, -40)
+
+[node name="NameLabel" type="Label" parent="NameSprite"]
+offset_left = -29.0
+offset_top = -12.0
+offset_right = 33.0
+offset_bottom = 11.0
+text = "Player 1"
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]

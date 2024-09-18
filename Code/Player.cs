@@ -3,12 +3,13 @@
 public class Player
 {
 
-    public int id { get; set; } = 0;
+    public int ID { get; set; } = 0;
+    public string PlayerName { get; set; } = "Player 1";
 
-    public int points { get; set; } = 0;
+    public int Points { get; private set; } = 0;
 
     public void AddPoints(int amount)
     {
-        points += amount;
+        Points += amount;
     }
 }

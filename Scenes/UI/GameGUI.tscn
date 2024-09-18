@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cq620bk73wl86"]
 
 [ext_resource type="Script" path="res://Code/GameGUI.cs" id="1_hb7di"]
-[ext_resource type="PackedScene" uid="uid://btrxyjkfuggy8" path="res://Scenes/HealthBar.tscn" id="2_vtb7p"]
+[ext_resource type="PackedScene" uid="uid://btrxyjkfuggy8" path="res://Scenes/UI/HealthBar.tscn" id="2_vtb7p"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aj8gl"]
 bg_color = Color(0, 0, 0, 1)
