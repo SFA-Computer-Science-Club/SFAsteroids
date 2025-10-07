@@ -19,6 +19,11 @@ public partial class ControlsOptionsMenu : Control
 		{"player_1_left", "Player 1 Move Left"},
 		{"player_1_right", "Player 1 Move Right"},
 		{"player_1_fire", "Player 1 Move Fire"},
+		{"player_2_down", "Player 2 Move Down"},
+		{"player_2_up", "Player 2 Move Up"},
+		{"player_2_left", "Player 2 Move Left"},
+		{"player_2_right", "Player 2 Move Right"},
+		{"player_2_fire", "Player 2 Move Fire"}
 	};
 	
 	public override void _Ready()
