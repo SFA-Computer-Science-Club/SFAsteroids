@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://v4jjl8sh3f0t"]
 
-[ext_resource type="Script" path="res://Code/Game.cs" id="1_xj64d"]
-[ext_resource type="Shader" path="res://Assets/Shaders/CRT.gdshader" id="2_gwcex"]
+[ext_resource type="Script" uid="uid://p1oym2dx1wmn" path="res://Code/Game.cs" id="1_xj64d"]
+[ext_resource type="Shader" uid="uid://21sfm4ybcdbb" path="res://Assets/Shaders/CRT.gdshader" id="2_gwcex"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fp1c7"]
 shader = ExtResource("2_gwcex")
@@ -17,6 +17,7 @@ shader_parameter/horzFuzzOpt = 0.15
 script = ExtResource("1_xj64d")
 
 [node name="Shader" type="ColorRect" parent="."]
+visible = false
 z_index = 2
 material = SubResource("ShaderMaterial_fp1c7")
 offset_right = 1914.0

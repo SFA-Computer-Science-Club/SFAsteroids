@@ -3,7 +3,7 @@ using System;
 using SpaceGame.Code;
 using SpaceGame.Code.Helpers;
 
-public partial class GameGUI : Control
+public partial class GameGUIMultiplayer : Control
 {
 	
 	public GameContext GameContext { get; set; }
@@ -29,7 +29,11 @@ public partial class GameGUI : Control
 		ship = s;
 		ShipHealthBar.player1 = s;
 	}
-
+	public void SetShip2(Ship s)
+	{
+		ship = s;
+		ShipHealthBar.player2 = s;
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

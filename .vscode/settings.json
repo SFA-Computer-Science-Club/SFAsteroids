@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        "**/*.cs.uid": true,
+        "**/*.csproj.*": true
+    },
+    "godotTools.editorPath.godot4": "c:\\Users\\ctt20\\Desktop\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64\\Godot_v4.5-stable_mono_win64.exe"
+}
