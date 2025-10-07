@@ -14,6 +14,7 @@ public partial class Game : CanvasLayer
 	private bool _multiplayer;
 
 	private PackedScene PackedGameGUI;
+	private PackedScene PackedGameGUI2;
 	private GameGUI SinglePlayerGUI;
 	private GameGUIMultiplayer MultiPlayerGUI;
 
@@ -28,7 +29,6 @@ public partial class Game : CanvasLayer
 		PackedShip = GD.Load<PackedScene>("res://Scenes/Ship.tscn");
 		
 		lAsteroid = GD.Load<PackedScene>("res://Scenes/LargeAsteroid.tscn");
-
 		if (_multiplayer)
 		{
 			PackedGameGUI = GD.Load<PackedScene>("res://Scenes/UI/GameGUIMultiplayer.tscn");
@@ -132,7 +132,7 @@ public partial class Game : CanvasLayer
 		player2Ship.ShowName = true;
 
 		MultiPlayerGUI = PackedGameGUI.Instantiate<GameGUIMultiplayer>();
-		CallDeferred("add_child", SinglePlayerGUI);
+		CallDeferred("add_child", MultiPlayerGUI);
 		MultiPlayerGUI.ForceReady();
 		MultiPlayerGUI.SetShip(player1Ship);
 		MultiPlayerGUI.SetShip2(player2Ship);

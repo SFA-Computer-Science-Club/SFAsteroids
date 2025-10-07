@@ -17,7 +17,6 @@ shader_parameter/horzFuzzOpt = 0.15
 script = ExtResource("1_xj64d")
 
 [node name="Shader" type="ColorRect" parent="."]
-visible = false
 z_index = 2
 material = SubResource("ShaderMaterial_fp1c7")
 offset_right = 1914.0

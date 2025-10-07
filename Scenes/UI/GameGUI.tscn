@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://brfc5muyt71ep"]
+[gd_scene load_steps=8 format=3 uid="uid://brfc5muyt71ep"]
 
-[ext_resource type="Script" uid="uid://djmfavqdsmygw" path="res://Code/GameGUIMultiplayer.cs" id="1_fwjdj"]
+[ext_resource type="Script" uid="uid://vui7pacqt81f" path="res://Code/GameGUI.cs" id="1_helaf"]
 [ext_resource type="PackedScene" uid="uid://ior8kxtfnp2a" path="res://Scenes/UI/HealthBar.tscn" id="2_vtb7p"]
+[ext_resource type="Script" uid="uid://ck31m3piv1apf" path="res://Code/HealthBar.cs" id="3_helaf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_helaf"]
 bg_color = Color(0, 0, 0, 1)
@@ -30,7 +31,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("1_fwjdj")
+script = ExtResource("1_helaf")
 
 [node name="GamePanel" type="Panel" parent="."]
 layout_mode = 0
@@ -86,6 +87,7 @@ offset_left = 270.0
 offset_top = 28.0
 offset_right = 270.0
 offset_bottom = 28.0
+script = ExtResource("3_helaf")
 
 [node name="FPS" type="Label" parent="GamePanel"]
 layout_mode = 0
