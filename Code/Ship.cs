@@ -133,7 +133,7 @@ public partial class Ship : RigidBody2D
 			return;
 		}
 		
-		_nameSprite.SetGlobalRotation(0);
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -205,7 +205,7 @@ public partial class Ship : RigidBody2D
 				
 				proj.ApplyForce(forwardVector * 400);
 
-				global::projectile actualProj = (projectile)projectileInstance;
+				global::Projectile actualProj = (Projectile)projectileInstance;
 				actualProj.FiredFrom = this;
 				
 				player.Play();

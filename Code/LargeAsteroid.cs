@@ -77,7 +77,7 @@ public partial class LargeAsteroid : RigidBody2D
 			return;
 		}
 
-		projectile proj = (projectile)node;		
+		Projectile proj = (Projectile)node;		
 		
 		_healthBar.Show();
 		

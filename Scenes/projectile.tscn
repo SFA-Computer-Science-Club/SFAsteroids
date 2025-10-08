@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://b4dyx5ncovcph"]
 
-[ext_resource type="Script" path="res://Code/projectile.cs" id="1_fhfb1"]
+[ext_resource type="Script" path="res://Code/Projectile.cs" id="1_fhfb1"]
 [ext_resource type="Texture2D" uid="uid://q52vx6t0d1m2" path="res://Assets/Textures/Projectile1.png" id="1_xn112"]
 [ext_resource type="Texture2D" uid="uid://cru6kmluqxapu" path="res://Assets/Textures/Projectile2.png" id="2_rqd1w"]
 

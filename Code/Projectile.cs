@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class projectile : RigidBody2D
+public partial class Projectile : RigidBody2D
 {
 	// Called when the node enters the scene tree for the first time.
 	[Export] public int Damage = 10;
