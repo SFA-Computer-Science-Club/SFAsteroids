@@ -8,7 +8,7 @@ using SpaceGame.Code.Helpers;
 public partial class Game : CanvasLayer
 {
 	// Called when the node enters the scene tree for the first time.
-	public Vector2 ScreenSize;
+	public Vector2 ScreenSize;   
 	private PackedScene PackedShip;
 	private Ship ShipInstance;
 	private bool _multiplayer;
