@@ -146,6 +146,14 @@ public partial class Ship : RigidBody2D
 		
 		int rotationDir = 0;
 		float rotationSpeed = 3.5f;
+
+		// Determine which player's input actions this ship should respond to.
+		// Defaults to player_1 if ShipPlayer or ID is not set.
+		int playerID = 1;
+		if (ShipPlayer != null && ShipPlayer.ID > 0)
+		{
+			playerID = ShipPlayer.ID;
+		}
 		
 		if (!velocity.IsZeroApprox())
 		{
@@ -156,26 +164,26 @@ public partial class Ship : RigidBody2D
 		//Movement code
 		bool anyPressed = false;
 
-		if (Input.IsActionPressed("player_1_right"))
+		if (Input.IsActionPressed("player_" + playerID + "_right"))
 		{
 			rotationDir+=1;
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("player_1_left"))
+		if (Input.IsActionPressed("player_" + playerID + "_left"))
 		{
 			rotationDir-=1;
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("player_1_down"))
+		if (Input.IsActionPressed("player_" + playerID + "_down"))
 		{
 			
 			ApplyForce(-EnginePower * forwardVector);
 			anyPressed = true;
 		}
 
-		if (Input.IsActionPressed("player_1_up"))
+		if (Input.IsActionPressed("player_" + playerID + "_up"))
 		{
 
 			ApplyForce(EnginePower * forwardVector);
@@ -183,7 +191,7 @@ public partial class Ship : RigidBody2D
 		}
 
 		//Handles firing
-		if (Input.IsActionPressed("player_1_fire"))
+		if (Input.IsActionPressed("player_" + playerID + "_fire"))
 		{
 			if (timer.IsStopped())
 			{

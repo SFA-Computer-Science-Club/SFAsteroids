@@ -5,7 +5,7 @@ public partial class HealthBar : Control
 {
 
 	[Export]
-	public Ship Adornee;
+	public Ship player1;
 
 	public ProgressBar Health;
 	// Called when the node enters the scene tree for the first time.
@@ -17,9 +17,9 @@ public partial class HealthBar : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (Adornee != null)
+		if (player1 != null)
 		{
-			Health.Value = Adornee.Health;
+			Health.Value = player1.Health;
 		}
 	}
 }
