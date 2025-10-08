@@ -58,7 +58,7 @@ public partial class ControlsOptionsMenu : Control
 
 		if (@event is InputEventMouseMotion)
 		{
-			return;S
+			return;
 		}
 		
 		InputMap.ActionEraseEvents(_actionToRemap);
